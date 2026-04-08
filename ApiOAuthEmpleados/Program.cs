@@ -10,6 +10,7 @@ HelperActionOAuthService helper = new HelperActionOAuthService(builder.Configura
 
 //ESTA INSTANCIA SOLAMENTE DEBEMOS CREARLA UNA VEZ
 builder.Services.AddSingleton<HelperActionOAuthService>(helper);
+builder.Services.AddSingleton<HelperCifrado>();
 //HABILITAMOS LA SEGURIDAD DENTRO DE PROGRAM
 builder.Services.AddAuthentication(helper.GetAuthenticationSchema())
     .AddJwtBearer(helper.GetJWTBearerOptions());

@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace ApiOAuthEmpleados.Controllers
 {
@@ -16,11 +17,13 @@ namespace ApiOAuthEmpleados.Controllers
     {
         private RepositoryHospital repo;
         private HelperActionOAuthService helper;
+        private string claveCifrado;
 
-        public AuthController(RepositoryHospital repo, HelperActionOAuthService helper)
+        public AuthController(RepositoryHospital repo, HelperActionOAuthService helper, IConfiguration conf)
         {
             this.repo = repo;
             this.helper = helper;
+            this.claveCifrado = conf.GetValue<string>("CypherKeys:CryptoJson");
         }
 
         [HttpPost]
@@ -39,10 +42,11 @@ namespace ApiOAuthEmpleados.Controllers
                                             SecurityAlgorithms.HmacSha256);
 
                 string jsonEmpleado = JsonConvert.SerializeObject(empleado);
+                string jsonEncryptado = HelperCifrado.EncryptString(jsonEmpleado, Encoding.UTF8.GetBytes(this.claveCifrado));
                 //CREAMOS UN ARRAY DE CLAIMS PARA EL TOKEN
                 Claim[] information = new[]
                 {
-                    new Claim("UserData", jsonEmpleado)
+                    new Claim("UserData", jsonEncryptado)
                 };
                 //EL TOKEN SE GENERA CON UNA CLASE Y DEBEMOS ALMACENAR
                 //LOS DATOS DE ISSUER, CREDENTIALS...
