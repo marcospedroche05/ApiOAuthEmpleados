@@ -49,7 +49,7 @@ namespace ApiOAuthEmpleados.Controllers
             return await this.repo.FindEmpleadoAsync(empleado.IdEmpleado);
         }
 
-        [Authorize]
+        [Authorize(Roles = "PRESIDENTE")]
         [HttpGet]
         [Route("[action]")]
         public async Task<ActionResult<List<Empleado>>> Compis()

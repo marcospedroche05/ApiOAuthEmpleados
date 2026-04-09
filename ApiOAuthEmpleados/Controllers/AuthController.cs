@@ -44,9 +44,11 @@ namespace ApiOAuthEmpleados.Controllers
                 string jsonEmpleado = JsonConvert.SerializeObject(empleado);
                 string jsonEncryptado = HelperCifrado.EncryptString(jsonEmpleado, Encoding.UTF8.GetBytes(this.claveCifrado));
                 //CREAMOS UN ARRAY DE CLAIMS PARA EL TOKEN
+                //AQUI ALMACENARIAMOS EL ROLE DEL USUARIO
                 Claim[] information = new[]
                 {
-                    new Claim("UserData", jsonEncryptado)
+                    new Claim("UserData", jsonEncryptado),
+                    new Claim(ClaimTypes.Role, empleado.Oficio)
                 };
                 //EL TOKEN SE GENERA CON UNA CLASE Y DEBEMOS ALMACENAR
                 //LOS DATOS DE ISSUER, CREDENTIALS...
